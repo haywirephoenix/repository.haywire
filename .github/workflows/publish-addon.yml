@@ -37,7 +37,7 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    # One publish at a time: each rewrites addons.xml.
+    # One publish at a time per add-on repository; across them, Publish retries.
     concurrency:
       group: repository-haywire
       cancel-in-progress: false
@@ -101,13 +101,16 @@ jobs:
           ADDON_ID: ${{ steps.info.outputs.id }}
           VERSION: ${{ steps.info.outputs.version }}
         run: |
-          python3 tools/update_repo.py add "../addon/dist/$ADDON_ID-$VERSION.zip"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A zips
-          git commit -m "$ADDON_ID $VERSION"
-          for attempt in 1 2 3; do
-            git pull --rebase && git push && exit 0
-            sleep 10
+          # Another add-on may publish at the same moment (concurrency groups don't span
+          # repositories): on a rejected push, start again from the latest main.
+          for attempt in 1 2 3 4 5; do
+            git fetch -q origin main && git reset -q --hard origin/main
+            python3 tools/update_repo.py add "../addon/dist/$ADDON_ID-$VERSION.zip"
+            git add -A zips
+            git commit -q -m "$ADDON_ID $VERSION"
+            git push origin HEAD:main && exit 0
+            sleep $((attempt * 5))
           done
           exit 1
