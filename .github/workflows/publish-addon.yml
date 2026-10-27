@@ -1,0 +1,113 @@
+# Publishes the calling add-on repository's current version into this Kodi repository.
+#
+# In an add-on's repo (.github/workflows/publish.yml):
+#
+#   on:
+#     push:
+#       branches: [main]
+#       paths: [addon.xml]          # a version bump publishes
+#     workflow_dispatch:
+#   jobs:
+#     publish:
+#       uses: haywirephoenix/repository.haywire/.github/workflows/publish-addon.yml@main
+#       secrets:
+#         token: ${{ secrets.REPOSITORY_HAYWIRE_TOKEN }}   # can push to repository.haywire
+#
+# A version that's already published is skipped. By default the zip is the repo as checked out
+# (minus `exclude`), as <id>/...; `build` replaces that with a command that writes
+# dist/<id>-<version>.zip itself ($ADDON_ID and $VERSION are set).
+name: Publish an add-on
+
+on:
+  workflow_call:
+    inputs:
+      build:
+        description: Command run in the add-on's checkout that writes dist/<id>-<version>.zip (default: zip the checkout)
+        type: string
+        default: ""
+      exclude:
+        description: Paths left out of the default zip, space separated
+        type: string
+        default: ".git .github .gitignore .gitattributes tests tools dist"
+    secrets:
+      token:
+        description: A token that can push to haywirephoenix/repository.haywire
+        required: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    # One publish at a time: each rewrites addons.xml.
+    concurrency:
+      group: repository-haywire
+      cancel-in-progress: false
+    steps:
+      - name: Check out the add-on
+        uses: actions/checkout@v4
+        with:
+          path: addon
+          fetch-depth: 0
+
+      - name: Check out the repository
+        uses: actions/checkout@v4
+        with:
+          repository: haywirephoenix/repository.haywire
+          token: ${{ secrets.token }}
+          path: repo
+
+      - name: Read its id and version
+        id: info
+        run: |
+          python3 - <<'EOF' >> "$GITHUB_OUTPUT"
+          import xml.etree.ElementTree as ET
+          root = ET.parse("addon/addon.xml").getroot()
+          print("id=" + root.get("id"))
+          print("version=" + root.get("version"))
+          EOF
+
+      - name: Already published?
+        id: check
+        run: |
+          if python3 repo/tools/update_repo.py has "${{ steps.info.outputs.id }}" "${{ steps.info.outputs.version }}"; then
+            echo "${{ steps.info.outputs.id }} ${{ steps.info.outputs.version }} is already published"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build the zip
+        if: steps.check.outputs.skip != 'true'
+        working-directory: addon
+        env:
+          ADDON_ID: ${{ steps.info.outputs.id }}
+          VERSION: ${{ steps.info.outputs.version }}
+          BUILD: ${{ inputs.build }}
+          EXCLUDE: ${{ inputs.exclude }}
+        run: |
+          mkdir -p dist
+          if [ -n "$BUILD" ]; then
+            bash -e -c "$BUILD"
+          else
+            excludes=()
+            for path in $EXCLUDE; do excludes+=(--exclude="/$path"); done
+            mkdir -p "../stage/$ADDON_ID"
+            rsync -a "${excludes[@]}" ./ "../stage/$ADDON_ID/"
+            (cd ../stage && zip -qr "../addon/dist/$ADDON_ID-$VERSION.zip" "$ADDON_ID")
+          fi
+          ls -l dist
+
+      - name: Publish
+        if: steps.check.outputs.skip != 'true'
+        working-directory: repo
+        env:
+          ADDON_ID: ${{ steps.info.outputs.id }}
+          VERSION: ${{ steps.info.outputs.version }}
+        run: |
+          python3 tools/update_repo.py add "../addon/dist/$ADDON_ID-$VERSION.zip"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A zips
+          git commit -m "$ADDON_ID $VERSION"
+          for attempt in 1 2 3; do
+            git pull --rebase && git push && exit 0
+            sleep 10
+          done
+          exit 1
