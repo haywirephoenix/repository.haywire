@@ -13,7 +13,7 @@ A Kodi repository for haywirephoenix's add-ons:
 ## Install
 
 1. Download the repository add-on:
-   [repository.haywire-1.0.0.zip](https://raw.githubusercontent.com/haywirephoenix/repository.haywire/main/zips/repository.haywire/repository.haywire-1.0.0.zip)
+   [repository.haywire-1.0.1.zip](https://raw.githubusercontent.com/haywirephoenix/repository.haywire/main/zips/repository.haywire/repository.haywire-1.0.1.zip)
 2. In Kodi: Add-ons > Install from zip file, pick it (allow unknown sources if asked).
 3. Install the add-ons from Add-ons > Install from repository > haywire repository. Kodi
    updates them from here.
