@@ -1,0 +1,43 @@
+# Publishes the repository add-on itself (repository.haywire/) when its addon.xml version
+# changes, or by hand: packs it into zips/ with tools/update_repo.py and points the README's
+# install link at the new zip. Already-published versions are skipped.
+name: Publish the repository add-on
+
+on:
+  push:
+    branches: [main]
+    paths: [repository.haywire/addon.xml]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: repository-haywire
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Publish
+        run: |
+          VERSION=$(python3 -c 'import xml.etree.ElementTree as ET; print(ET.parse("repository.haywire/addon.xml").getroot().get("version"))')
+          if python3 tools/update_repo.py has repository.haywire "$VERSION"; then
+            echo "repository.haywire $VERSION is already published"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # An add-on may publish at the same moment: on a rejected push, start again from main.
+          for attempt in 1 2 3 4 5; do
+            git fetch -q origin main && git reset -q --hard origin/main
+            python3 tools/update_repo.py pack repository.haywire
+            sed -i -E "s/repository\.haywire-[0-9][0-9.]*\.zip/repository.haywire-$VERSION.zip/g" README.md
+            git add -A zips README.md
+            git commit -q -m "repository.haywire $VERSION"
+            git push origin HEAD:main && exit 0
+            sleep $((attempt * 5))
+          done
+          exit 1

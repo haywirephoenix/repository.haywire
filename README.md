@@ -5,6 +5,7 @@ A Kodi repository for haywirephoenix's add-ons:
 | Add-on | |
 |---|---|
 | `plugin.video.floppy` | Floppy |
+| `script.tmdbhelper.sync.floppy` | TMDbHelper Sync - Floppy (Installer): install this one, it brings the sync module |
 | `script.module.tmdbhelper.sync.floppy` | TMDbHelper Sync - Floppy |
 | `plugin.video.ultra.player` | Ultra Player: plays titles from Stremio and Nuvio add-ons |
 | `plugin.video.torrest` | Torrest fork: buffering and download status for skins (all platforms' binaries) |
@@ -27,6 +28,10 @@ here whenever its `addon.xml` version changes (or by hand). That builds the zip,
 `tools/update_repo.py`, and pushes. The add-on repositories need a secret,
 `REPOSITORY_HAYWIRE_TOKEN`: a fine-grained token with Contents read and write on this
 repository only.
+
+The repository add-on itself (`repository.haywire/`) is published the same way by
+`.github/workflows/publish-repository.yml` here when its `addon.xml` version changes; it also
+points the install link above at the new zip.
 
 By hand:
 
