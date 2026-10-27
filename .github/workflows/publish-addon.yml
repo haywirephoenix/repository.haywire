@@ -22,16 +22,16 @@ on:
   workflow_call:
     inputs:
       build:
-        description: Command run in the add-on's checkout that writes dist/<id>-<version>.zip (default: zip the checkout)
+        description: "Command run in the add-on's checkout that writes dist/<id>-<version>.zip (default: zip the checkout)"
         type: string
         default: ""
       exclude:
-        description: Paths left out of the default zip, space separated
+        description: "Paths left out of the default zip, space separated"
         type: string
         default: ".git .github .gitignore .gitattributes tests tools dist"
     secrets:
       token:
-        description: A token that can push to haywirephoenix/repository.haywire
+        description: "A token that can push to haywirephoenix/repository.haywire"
         required: true
 
 jobs:
