@@ -53,7 +53,7 @@
         <reuselanguageinvoker>true</reuselanguageinvoker>
     </extension>
 </addon>
-<addon id="plugin.video.ultra.player" name="Ultra Player" version="0.2.0" provider-name="haywire">
+<addon id="plugin.video.ultra.player" name="Ultra Player" version="0.3.0" provider-name="haywire">
     <requires>
         <import addon="xbmc.python" version="3.0.0"/>
     </requires>
@@ -62,11 +62,20 @@
     </extension>
     <!-- At login: install its TMDb Helper player file where it's missing (service.py). -->
     <extension point="xbmc.service" library="service.py" start="login"/>
+    <!-- Download a movie or episode for later, from the same sources (context.py). -->
+    <extension point="kodi.context.item">
+        <menu id="kodi.core.main">
+            <item library="context.py">
+                <label>30120</label>
+                <visible>[String.IsEqual(ListItem.DBType,movie) | String.IsEqual(ListItem.DBType,episode)] + !ListItem.IsFolder</visible>
+            </item>
+        </menu>
+    </extension>
     <extension point="xbmc.addon.metadata">
         <platform>all</platform>
         <reuselanguageinvoker>false</reuselanguageinvoker>
         <summary lang="en_GB">Plays movies and episodes from Stremio and Nuvio add-ons.</summary>
-        <description lang="en_GB">A player for Kodi: give it a title's ids and it asks your Stremio-protocol add-ons (Torrentio, AIOStreams, ...) for streams, then plays the best one or the one you pick. Use it from skin.ultra, Floppy, TMDb Helper or any add-on that takes a player path. Manage sources adds, configures, reorders and removes the add-ons.</description>
+        <description lang="en_GB">A player for Kodi: give it a title's ids and it asks your Stremio-protocol add-ons (Torrentio, AIOStreams, ...) and player add-ons for streams, then plays the best one or the one you pick. Use it from skin.ultra, Floppy, TMDb Helper or any add-on that takes a player path. Manage sources adds, configures, reorders and removes them. Download (in a movie or episode's context menu) saves a title for later; downloads and library copies play first, without asking the sources.</description>
         <license>GPL-2.0-or-later</license>
         <assets>
             <icon>icon.png</icon>
