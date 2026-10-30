@@ -5,6 +5,7 @@ A Kodi repository for haywirephoenix's add-ons:
 | Add-on | |
 |---|---|
 | `plugin.video.floppy` | Floppy |
+| `plugin.video.tally` | Tally: watched status, resume points and watchlists in a local database (Floppy without the server) |
 | `script.tmdbhelper.sync.floppy` | TMDbHelper Sync - Floppy (Installer): install this one, it brings the sync module |
 | `script.module.tmdbhelper.sync.floppy` | TMDbHelper Sync - Floppy |
 | `plugin.video.ultra.player` | Ultra Player: plays titles from Stremio and Nuvio add-ons |
