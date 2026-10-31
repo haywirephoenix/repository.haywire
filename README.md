@@ -4,12 +4,13 @@ A Kodi repository for haywirephoenix's add-ons:
 
 | Add-on | |
 |---|---|
-| `plugin.video.floppy` | Floppy |
-| `plugin.video.tally` | Tally: watched status, resume points and watchlists in a local database (Floppy without the server) |
-| `script.tmdbhelper.sync.floppy` | TMDbHelper Sync - Floppy (Installer): install this one, it brings the sync module |
-| `script.module.tmdbhelper.sync.floppy` | TMDbHelper Sync - Floppy |
-| `plugin.video.ultra.player` | Ultra Player: plays titles from Stremio and Nuvio add-ons |
-| `plugin.video.torrest` | Torrest fork: buffering and download status for skins (all platforms' binaries) |
+| `plugin.video.tally` | Tally: watched status, resume points and watchlists in a local database (no host required) |
+| `plugin.video.ultra.player` | Ultra Player: plays movies and episodes from your Stremio-protocol add-ons (Torrentio, AIOStreams, ...) and Nuvio: plays the best stream or the one you pick, hands torrents to Torrest, and plays downloads, library copies and torrents Torrest still has first, without asking the sources. Works as a player path for skins, TMDb Helper and other add-ons; Download saves a title for later |
+| `plugin.video.torrest` | Torrest fork: torrent streaming with every platform's binary, including a webOS build for LG TVs. Reports buffering and download status to skins (a skin can draw its own loading screen and OSD, and cancel a play); tidies up after watching (delete when stopped near the start or watched to the end, automatically or after asking; keep season packs; pause finished torrents so nothing seeds in the background); keeps public trackers up to date; buffers the start and end of a file in parallel, and skips buffering for downloaded files; downloads without playing |
+| `plugin.video.floppy` | Floppy: Companion sync addon for [Floppy](https://github.com/dannyvfilms/Floppy) self-hosted media tracker |
+| `script.tmdbhelper.sync.floppy` | TMDbHelper Sync - Floppy (Installer): handy installer for the sync module to manage it from your addons page |
+| `script.module.tmdbhelper.sync.floppy` | TMDbHelper Sync - Floppy: Sync module for TMDB Helper |
+
 
 ## Install
 
