@@ -5,6 +5,13 @@ on:
     branches: [ "main" ]
   workflow_dispatch:
 
+# Each add-on's publish pushes here, and they often land together: a Pages deployment can't
+# start while another is in progress (it fails with 400). One at a time instead; a waiting run
+# is replaced by a newer one, which deploys main as it is by then (everything pushed before).
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
 jobs:
   pages-directory-listing:
     runs-on: ubuntu-latest
