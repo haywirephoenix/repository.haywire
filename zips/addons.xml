@@ -190,4 +190,26 @@
         </assets>
     </extension>
 </addon>
+<addon id="script.tmdbhelper.sync.tally" name="TMDbHelper Sync - Tally (Installer)" version="1.0.0" provider-name="haywirephoenix">
+    <requires>
+        <import addon="xbmc.python" version="3.0.0"/>
+        <!-- The sync provider itself: a module, which Kodi's repository browser doesn't list,
+             so this add-on is what you install; Kodi brings the module (with Tally and TMDbHelper). -->
+        <import addon="script.module.tmdbhelper.sync.tally" version="1.0.0"/>
+    </requires>
+    <extension point="xbmc.python.script" library="default.py">
+        <provides>executable</provides>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Installs the Tally sync provider for TMDbHelper.</summary>
+        <description lang="en_GB">Installs TMDbHelper Sync - Tally, which syncs watched history, resume points, watchlist and next episodes between TMDbHelper and Tally, the add-on that keeps them in a small database inside Kodi, and can scrobble to it. Open this add-on to set the sync up, then choose Tally in TMDbHelper's settings.</description>
+        <platform>all</platform>
+        <license>GPL-3.0-or-later</license>
+        <source>https://github.com/haywirephoenix/script.tmdbhelper.sync.tally</source>
+        <assets>
+            <icon>resources/icon.png</icon>
+            <fanart>resources/fanart.png</fanart>
+        </assets>
+    </extension>
+</addon>
 </addons>
