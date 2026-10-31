@@ -147,6 +147,26 @@
         </assets>
     </extension>
 </addon>
+<addon id="script.module.tmdbhelper.sync.tally" version="1.0.0" name="TMDbHelper Sync - Tally" provider-name="haywirephoenix">
+    <requires>
+        <import addon="xbmc.python" version="3.0.1"/>
+        <import addon="script.module.jurialmunkey" version="0.2.35"/>
+        <import addon="plugin.video.themoviedb.helper" version="6.19.0"/>
+        <import addon="plugin.video.tally" version="0.1.6"/>
+    </requires>
+    <extension point="xbmc.python.module" library="resources/lib"/>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Tally sync provider for TMDbHelper</summary>
+        <description lang="en_GB">Watched history, resume points, watchlist, next episodes, synced-state actions and scrobbling for TMDbHelper from Tally (plugin.video.tally), which keeps them in a small database inside Kodi. No server or account needed.</description>
+        <platform>all</platform>
+        <license>GPL-3.0-or-later</license>
+        <source>https://github.com/haywirephoenix/script.module.tmdbhelper.sync.tally</source>
+        <assets>
+            <icon>resources/icon.png</icon>
+            <fanart>resources/fanart.png</fanart>
+        </assets>
+    </extension>
+</addon>
 <addon id="script.tmdbhelper.sync.floppy" name="TMDbHelper Sync - Floppy (Installer)" version="1.0.1" provider-name="haywirephoenix">
     <requires>
         <import addon="xbmc.python" version="3.0.0"/>
